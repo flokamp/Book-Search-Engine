@@ -1,27 +1,24 @@
 const { AuthenticationError } = require("apollo-server-express");
 const { signToken } = require("../utils/auth");
-
 const { User, Book } = require("../models");
 
 const resolvers = {
 	Query: {
 		me: async (parent, args, context) => {
 			if (context.user) {
-				const userData = await User.findOne({ _id: context.user._id })
+				const user = await User.findById(context.user._id)
 					.select("-__v -password")
-					.populate("thoughts")
-					.populate("friends");
+					.populate("bookCount")
+					.populate("savedBooks");
 
-				return userData;
+				return user;
 			}
 
 			throw new AuthenticationError("Not logged in");
 		},
-		user: async () => {
-			return User.find().sort({ createdAt: -1 });
-		},
-		book: async () => {
-			return Book.find().sort({ createdAt: -1 });
+
+		books: async (parent, args) => {
+			return Book.find({ bookId: args.bookId });
 		},
 	},
 	Mutation: {
@@ -56,7 +53,7 @@ const resolvers = {
 
 				await User.findByIdAndUpdate(
 					{ _id: context.user._id },
-					{ $push: { books: book.bookId } },
+					{ $push: { savedBooks: book.bookId } },
 					{ new: true }
 				);
 
@@ -67,16 +64,9 @@ const resolvers = {
 		},
 		removeBook: async (parent, args, context) => {
 			if (context.user) {
-				const book = await Book.findOneAndUpdate({
-					...args,
-					username: context.user.username,
+				const book = await Book.findOneAndDelete({
+					bookId: args.bookId,
 				});
-
-				await User.findByIdAndUpdate(
-					{ _id: context.user._id },
-					{ $push: { books: book.bookId } },
-					{ new: true }
-				);
 
 				return book;
 			}
