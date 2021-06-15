@@ -1,12 +1,13 @@
 # Book Search Engine
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-yellow.svg)](https://opensource.org/licenses/Apache-2.0)
+
 [Demo here!](https://intense-ridge-82764.herokuapp.com/)
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-yellow.svg)](https://opensource.org/licenses/Apache-2.0)
+![search](/app-images/search.png)
 
 ## Description
 
-![search](/app-images/search.png)
 Book Search Engine is a GraphQL API built with Apollo Server application that allows user to search and save books. The application is built using the MERN stack — with a React front end, MongoDB database, and Node.js/Express.js server and API. Features include:
 
 :white_check_mark: Search books by keyword or phrase <br>
