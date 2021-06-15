@@ -1,5 +1,4 @@
 const express = require("express");
-// import ApolloServer
 const { ApolloServer } = require("apollo-server-express");
 const { authMiddleware } = require("./utils/auth");
 const path = require("path");
@@ -20,7 +19,7 @@ const server = new ApolloServer({
 // integrate our Apollo server with the Express application as middleware
 server.applyMiddleware({ app });
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Serve up static assets
@@ -38,4 +37,8 @@ db.once("open", () => {
 		// log where we can go to test our GQL API
 		console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
 	});
+});
+
+process.on("uncaughtException", function (err) {
+	console.log("Caught exception: " + err);
 });
